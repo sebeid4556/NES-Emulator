@@ -7,7 +7,7 @@ CPU & PPU:
   - emulated down to every single cycle within an instruction
 
 The PPU memory space, or VRAM is visualized on the right hand side<br>
-  -TOP: CHR-ROM (the graphics data in the cartridge)
+  -TOP: CHR-ROM (the graphics data in the cartridge)<br>
   -BOTTOM: Nametables (the layout for the graphics tiles used to render) 
 
 ![alt text](https://github.com/sebeid4556/NES-Emulator/blob/main/screenshot/donkeykong.png?raw=true)
