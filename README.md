@@ -6,7 +6,7 @@ NOTE: Sprite rendering still WIP
 CPU & PPU:
   - emulated down to every single cycle within an instruction
 
-The PPU memory space, or VRAM is visualized on the right hand side
+The PPU memory space, or VRAM is visualized on the right hand side<br>
   -TOP: CHR-ROM (the graphics data in the cartridge)
   -BOTTOM: Nametables (the layout for the graphics tiles used to render) 
 
