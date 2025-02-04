@@ -19,6 +19,7 @@ The CPU Debugger shows the code dump, registers, flags, etc.. It also allows you
 The PPU Debugger shows the visual representation of VRAM and CHR-ROM:</br>
 - TOP: CHR-ROM (the graphics data in the cartridge)
 - BOTTOM: Nametables (the layout for the background tiles)
+
 ![alt text](https://github.com/sebeid4556/NES-Emulator/blob/ce552b7dde0234ea5ae9b95bed1541f61c8e5c71/screenshot/ppu-demo.gif)
 
 # Future Enhancements
