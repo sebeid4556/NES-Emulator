@@ -10,11 +10,11 @@ CPU:
 PPU:
 - Synchronized w/ system clock and emulated down to cycle precision
 
-Debuggers:
+# Debuggers
 The debuggers are displayed on the right-hand side of the app window.
 
-The CPU Debugger shows the code dump, registers, flags, etc.. It also allows you to pause execution at any point and step through individual instructions.
-The PPU Debugger shows the visual representation of VRAM and CHR-ROM:
+The CPU Debugger shows the code dump, registers, flags, etc.. It also allows you to pause execution at any point and step through individual instructions.</br>
+The PPU Debugger shows the visual representation of VRAM and CHR-ROM:</br>
 - TOP: CHR-ROM (the graphics data in the cartridge)
 - BOTTOM: Nametables (the layout for the background tiles) 
 
