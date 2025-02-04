@@ -26,9 +26,3 @@ The PPU Debugger shows the visual representation of VRAM and CHR-ROM:</br>
 - Mapper support
 - iNES 2.0 format support
 - Switch between CPU & PPU debug
-
-# Screenshots
-![alt text](https://github.com/sebeid4556/NES-Emulator/blob/main/screenshot/donkeykong.png?raw=true)
-![alt text](https://github.com/sebeid4556/NES-Emulator/blob/main/screenshot/smb.png?raw=true)
-![alt text](https://github.com/sebeid4556/NES-Emulator/blob/main/screenshot/nestest.png?raw=true)
-![alt text](https://github.com/sebeid4556/NES-Emulator/blob/main/screenshot/test.png?raw=true)
