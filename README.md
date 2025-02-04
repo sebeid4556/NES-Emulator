@@ -1,5 +1,6 @@
 # NES-Emulator
 Cycle-accurate NES emulator written in java
+![image](https://github.com/sebeid4556/NES-Emulator/blob/c0ff935341d7d75f061b70cd06f1200ea1e65b47/screenshot/all.png)
 
 # Technical
 CPU:
