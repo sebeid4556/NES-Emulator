@@ -6,7 +6,7 @@ Cycle-accurate NES emulator written in Java</br></br>
 CPU:
 - Emulated down to individual clock cycles within an instruction
 - Supports full instruction set (including illegal opcodes)
-- Passes nestest.nes (100% instruction accuracy)
+- Passes nestest.nes (all instructions perform their expected behaviors)
 
 PPU:
 - Synchronized w/ system clock and emulated down to cycle precision
