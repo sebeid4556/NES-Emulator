@@ -69,6 +69,7 @@ public class Emulator
 		CPU.toggleBreakpoint(false);
 		CPU.setBreakpointAt(0xE322);
 		
+		CPU.setUpdateDebugPool(true);
 		PPU.setUpdateDebugPool(true);			
 		
 		while(true)
@@ -83,13 +84,13 @@ public class Emulator
 					CPU.CYCLE();
 					masterCycle = 0;
 					
-					//GUI.updateCpuViewer();
+					GUI.updateCpuViewer();
 					//GUI.updateDebug();
 				}
-				//GUI.updatePpuViewer();
+				GUI.updatePpuViewer();
 				if(PPU.shouldDrawFrame())
 				{
-					//GUI.updateAll();
+					//GUI.updateAll();					
 					GUI.updateDebug();
 					GUI.updateScreen();
 				}

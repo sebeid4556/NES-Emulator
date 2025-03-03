@@ -367,9 +367,9 @@ public class Cpu
 	private boolean pause = false;
 	private boolean stepping = false;
 	
-	private boolean debug = true;
-	private boolean debugUpdatePool = false;
-	private boolean debugMemorySpace = false;
+	private boolean debug = false;
+	private boolean debugUpdatePool = false;	//must be enabled for CPU Viewer to work
+	private boolean debugMemorySpace = false;	//HUGE slow down
 	private boolean oamDebug = false;
 	
 	private boolean TOGGLE_BREAKPOINT = false;
@@ -422,7 +422,6 @@ public class Cpu
 		
 		SP = (byte)0xFD;
 		
-		//PC = COMBINE16(_read8rom(RESET_VECTOR), _read8rom((short)(UINT16(RESET_VECTOR) + 1)));
 		PC = COMBINE16(BYTESAFE(RESET_VECTOR), BYTESAFE((short)(UINT16(RESET_VECTOR) + 1)));
 		System.out.println(String.format("STARTING EXECUTION FROM $%04X", UINT16(PC)));
 		if(nestest) PC = (short) 0xC000;	//nestest code start
@@ -566,6 +565,11 @@ public class Cpu
 		pause = false;
 	}
 	
+	public void setUpdateDebugPool(boolean flag)
+	{
+		debug = flag;
+	}
+	
 	private void updateDebugPool()
 	{		
 		DebugPool.ir = IR;
@@ -582,7 +586,12 @@ public class Cpu
 		DebugPool.PC = PC;
 		DebugPool.RAM = RAM;
 		
-		if(!debugMemorySpace) return;
+		//updateDebugPoolMemorySpaceSnapshot();
+	}
+	
+	public void updateDebugPoolMemorySpaceSnapshot()
+	{
+		if(!debug) return;
 		for(int i = 0; i <= 0xFFFF; i++)
 		{			
 			if((i >= 0) && (i <= 0x1FFF))
@@ -6625,7 +6634,7 @@ public class Cpu
 				GuiController.pause = true;
 			}
 		}
-		if(debugUpdatePool) updateDebugPool();				
+		if(debug) updateDebugPool();				
 		
 		if(!NMI && !IRQ) INCREMENT_PC();		//PC increment is supressed during NMI or IRQ
 	}
@@ -6995,6 +7004,13 @@ public class Cpu
 	{	
 		if(GuiController.pause)
 		{	
+			//only update memory space snapshot upon request, because it is very performance heavy
+			if(DebugPool.updateMemorySpace)
+			{
+				updateDebugPoolMemorySpaceSnapshot();
+				DebugPool.updateMemorySpace = false;
+			}
+			
 			if(GuiController.step)
 			{
 				GuiController.step = false;

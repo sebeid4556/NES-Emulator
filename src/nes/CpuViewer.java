@@ -273,11 +273,6 @@ public class CpuViewer extends JPanel{
 				(byte)getByteMemory((addrUnsigned + 1) & 0xFFFF)));
 	}
 	
-	/*private int getOpcode(int offset)
-	{
-		return getByteROM(offset);		
-	}*/
-	
 	private int getOpcode(int pc)
 	{
 		return getByteMemory(pc);		
@@ -313,39 +308,6 @@ public class CpuViewer extends JPanel{
 		
 		return opcodeName;			
 	}
-	
-	/*private String getDisassembledInstructionParameters(int offset, int opcodeLength, String opcodeName)
-	{
-		String param = "";		
-		String mode;
-		int index;		
-		
-		index = opcodeName.indexOf("_");
-		if(index != -1)
-		{
-			mode = opcodeName.substring(index);
-			
-			if		(mode.equals(ADDRESS_MODE_IMP)) 	param += "";
-			else if (mode.equals(ADDRESS_MODE_A))		param += "A";
-			else if (mode.equals(ADDRESS_MODE_IMM)) 	param += String.format("#%02X", getByteROM(offset + 1));
-			else if (mode.equals(ADDRESS_MODE_Z))		param += String.format("$%02X", getByteROM(offset + 1));
-			else if (mode.equals(ADDRESS_MODE_Z_X)) 	param += String.format("$%02X, X", getByteROM(offset + 1));
-			else if (mode.equals(ADDRESS_MODE_Z_Y)) 	param += String.format("$%02X, Y", getByteROM(offset + 1));
-			else if (mode.equals(ADDRESS_MODE_ABS)) 	param += String.format("$%04X", getShortROM(offset + 1));
-			else if (mode.equals(ADDRESS_MODE_ABS_X)) 	param += String.format("$%04X, X", getShortROM(offset + 1));
-			else if (mode.equals(ADDRESS_MODE_ABS_Y)) 	param += String.format("$%04X, Y", getShortROM(offset + 1));
-			else if (mode.equals(ADDRESS_MODE_IND)) 	param += String.format("($%04X)", getShortROM(offset + 1));
-			else if (mode.equals(ADDRESS_MODE_X_IND)) 	param += String.format("($%02X, X)", getByteROM(offset + 1));
-			else if (mode.equals(ADDRESS_MODE_IND_Y)) 	param += String.format("($%02X), Y", getByteROM(offset + 1));
-			else if (mode.equals(ADDRESS_MODE_REL))
-			{				
-				int jump = (int)((byte) (getByteROM(offset + 1) & 0xFF));
-				param += String.format("$%04X", 
-						(DebugPool.CODE_START + offset + REL_BYTES + jump) );
-			}
-		}
-		return param;
-	}*/
 	
 	private String getDisassembledInstructionParameters(int addr, int opcodeLength, String opcodeName)
 	{
@@ -407,207 +369,6 @@ public class CpuViewer extends JPanel{
 		}
 		return len;
 	}
-	
-	/*private void updateDisassemblyLinesTextPane() throws BadLocationException
-	{		
-		textPane.setText("");
-		
-		//labelStr = "<html><font color=#ffffff>";
-		labelStr = "";
-		labelStr += "====    [CPU]    ====";
-		labelStr += String.format("CYCLE: %d\n", DebugPool.cycle);
-		labelStr += String.format("TOTAL: %d\n\n", DebugPool.cycleTotal);
-		labelStr += "==== [REGISTERS] ====\n";
-		labelStr += String.format("- A: $%02X\n", Util.UINT8(DebugPool.A));
-		labelStr += String.format("- X: $%02X\n", Util.UINT8(DebugPool.X));
-		labelStr += String.format("- Y: $%02X\n", Util.UINT8(DebugPool.Y));
-		labelStr += String.format("- P: $%02X ", Util.UINT8(DebugPool.P));				
-		doc.insertString(doc.getLength(), labelStr, colorNormal);		
-		for(int i = 0; i < 8; i++)
-		{
-			/*labelStr += Util.BIT(DebugPool.P, 7 - i) == 1 ? "<span bgcolor=\"black\" color=\"yellow\">" : "<span bgcolor=\"black\" color=\"gray\">";
-			labelStr += String.format(STATUS_FLAG_NAMES[i]);
-			labelStr += Util.BIT(DebugPool.P, 7 - i) == 1 ? "</span>" : "</span>";		
-			labelStr = String.format(STATUS_FLAG_NAMES[i]);
-			doc.insertString(doc.getLength(), labelStr, Util.BIT(DebugPool.P, 7 - i) == 1 ? colorStatusFlagOn : colorStatusFlagOff);
-		}
-		labelStr = "";
-		labelStr += "\n";
-		labelStr += String.format("-SP: $%02X\n", Util.UINT8(DebugPool.SP));
-		doc.insertString(doc.getLength(), labelStr, colorNormal);
-		labelStr += String.format("-PC: $%04X (OPCODE: %02X)\n\n", Util.UINT16(DebugPool.PC), DebugPool.ir);
-		labelStr += "====    [CODE]    ====\n";
-		doc.insertString(doc.getLength(), labelStr, colorHighlight);	
-		
-		/*int start = 0;
-		int offset;
-		int highlighted;
-		int opcode = 0;
-		String opcodeName = "";		
-		String opcodeMnemonic = "";
-		String param = "";
-		int opcodeLength = 0;
-		int pc = Util.UINT16(DebugPool.PC);		
-		
-		if(pc < DebugPool.CODE_START)
-		{
-			start = 0x0000;
-		}
-		else
-		{
-			if(pc < (DebugPool.CODE_START + LINE_HIGHLIGHTED))
-			{
-				start = 0x0000;
-			}
-			else if((pc + LINE_HIGHLIGHTED) > 0xFFFF - LINE_HIGHLIGHTED)
-			{
-				start = 0xFFFF - NUM_LINES_SHOWN;
-			}
-			else
-			{
-				start = pc - DebugPool.CODE_START - LINE_HIGHLIGHTED;
-			}
-		}
-		
-		highlighted = Util.UINT16(DebugPool.PC) - DebugPool.CODE_START;
-		
-		start = highlighted;
-		offset = start;
-		for(int line = 0; line < NUM_LINES_SHOWN; line++)
-		{
-			opcode = getOpcode(offset);
-			opcodeName = getDisassembledInstructionAddressingMode(opcode);
-			opcodeMnemonic = getDisassembledInstructionMnemonic(opcode);
-			param = getDisassembledInstructionParameters(offset, opcodeLength, opcodeName);
-			opcodeLength = getInstructionLength(opcodeName);
-			if(opcodeLength == -1)
-			{
-				System.out.println("ERROR: getInstructionLength() failed to resolve addressing mode of " + opcodeName);
-			}
-			
-			if(offset == highlighted) labelStr += "<span bgcolor=\"yellow\" color=\"black\">";
-			labelStr += String.format("$%04X|", DebugPool.CODE_START + offset);
-			for(int i = 0; i < 3; i++)
-			{
-				if(i < opcodeLength)
-				{
-					labelStr += String.format("%02X ", getByteROM(offset + i));
-				}
-				else
-				{
-					labelStr += "&nbsp;&nbsp;&nbsp;";				
-				}
-			}				
-			labelStr += "|";
-			labelStr += getDisassembledInstructionName(opcode) + " ";
-			labelStr += param;
-			if(offset == highlighted) labelStr += "</span>";			
-			labelStr += "<br>";
-			
-			offset += opcodeLength;
-		}
-		labelStr += "</font></html>";
-	}*/
-	
-	//original
-	/*private void updateDisassemblyLines()
-	{		
-		labelStr = "<html><font color=#ffffff>";
-		labelStr += "==== &nbsp;&nbsp;&nbsp;[CPU] &nbsp;&nbsp;&nbsp;====<br>";
-		labelStr += String.format("CYCLE: %d<br>", DebugPool.cycle);
-		labelStr += String.format("TOTAL: %d<br><br>", DebugPool.cycleTotal);
-		labelStr += "==== [REGISTERS] ====<br>";
-		labelStr += String.format("- A: $%02X<br>", Util.UINT8(DebugPool.A));
-		labelStr += String.format("- X: $%02X<br>", Util.UINT8(DebugPool.X));
-		labelStr += String.format("- Y: $%02X<br>", Util.UINT8(DebugPool.Y));
-		labelStr += String.format("- P: $%02X ", Util.UINT8(DebugPool.P));
-		for(int i = 0; i < 8; i++)
-		{
-			labelStr += Util.BIT(DebugPool.P, 7 - i) == 1 ? "<span bgcolor=\"black\" color=\"yellow\">" : "<span bgcolor=\"black\" color=\"gray\">";
-			labelStr += String.format(STATUS_FLAG_NAMES[i]);
-			labelStr += Util.BIT(DebugPool.P, 7 - i) == 1 ? "</span>" : "</span>";
-		}
-		labelStr += "<br>";
-		labelStr += String.format("-SP: $%02X<br>", Util.UINT8(DebugPool.SP));
-		labelStr += String.format("<span bgcolor=\"yellow\" color=\"black\">-PC: $%04X (OPCODE: %02X)</span><br><br>", Util.UINT16(DebugPool.PC), DebugPool.ir);
-		labelStr += "==== &nbsp;&nbsp;[CODE] &nbsp;&nbsp;&nbsp;====<br>";
-		
-		
-		int start = 0;
-		int offset;
-		int highlighted;
-		int opcode = 0;
-		String opcodeName = "";		
-		String opcodeMnemonic = "";
-		String param = "";
-		int opcodeLength = 0;
-		int pc = Util.UINT16(DebugPool.PC);		
-		
-		if(pc < DebugPool.CODE_START)
-		{
-			start = 0x0000;
-		}
-		else
-		{
-			if(pc < (DebugPool.CODE_START + LINE_HIGHLIGHTED))
-			{
-				start = 0x0000;
-			}
-			else if((pc + LINE_HIGHLIGHTED) > 0xFFFF - LINE_HIGHLIGHTED)
-			{
-				start = 0xFFFF - NUM_LINES_SHOWN;
-			}
-			else
-			{
-				start = pc - DebugPool.CODE_START - LINE_HIGHLIGHTED;
-			}
-		}
-		
-		highlighted = Util.UINT16(DebugPool.PC) - DebugPool.CODE_START;
-		
-		start = highlighted & 0xFFFF;
-		offset = start & 0xFFFF;					
-		
-		for(int line = 0; line < NUM_LINES_SHOWN; line++)
-		{
-			if(offset < 0)	//debug stuff
-			{
-				System.out.println("WHY TF IS offset " + Integer.toHexString(offset) + "?");
-			}
-			opcode = getOpcode(offset);
-			opcodeName = getDisassembledInstructionAddressingMode(opcode);
-			opcodeMnemonic = getDisassembledInstructionMnemonic(opcode);
-			param = getDisassembledInstructionParameters(offset, opcodeLength, opcodeName);
-			opcodeLength = getInstructionLength(opcodeName);
-			if(opcodeLength == -1)
-			{
-				System.out.println("ERROR: getInstructionLength() failed to resolve addressing mode of " + opcodeName);
-			}
-			
-			if(offset == highlighted) labelStr += "<span bgcolor=\"yellow\" color=\"black\">";
-			labelStr += String.format("$%04X|", DebugPool.CODE_START + offset);
-			for(int i = 0; i < 3; i++)
-			{
-				if(i < opcodeLength)
-				{
-					labelStr += String.format("%02X ", getByteROM(offset + i));
-				}
-				else
-				{
-					labelStr += "&nbsp;&nbsp;&nbsp;";				
-				}
-			}				
-			labelStr += "|";
-			labelStr += getDisassembledInstructionName(opcode) + " ";
-			labelStr += param;
-			if(offset == highlighted) labelStr += "</span>";			
-			labelStr += "<br>";
-			
-			offset += opcodeLength;
-			offset &= 0xFFFF;
-		}
-		labelStr += "</font></html>";
-	}*/
 
 	private void updateDisassemblyLines()
 	{		
@@ -619,7 +380,6 @@ public class CpuViewer extends JPanel{
 		labelStr += String.format("- A: $%02X<br>", Util.UINT8(DebugPool.A));
 		labelStr += String.format("- X: $%02X<br>", Util.UINT8(DebugPool.X));
 		labelStr += String.format("- Y: $%02X<br>", Util.UINT8(DebugPool.Y));
-		//labelStr += String.format("- P: $%02X ", Util.UINT8(DebugPool.P));
 		labelStr += String.format("- P: $%02X ", Util.UINT8(DebugPool.P)&0b11001111);
 		for(int i = 0; i < 8; i++)
 		{
@@ -643,27 +403,6 @@ public class CpuViewer extends JPanel{
 		int opcodeLength = 0;
 		int pc = Util.UINT16(DebugPool.PC);	
 		int addr;
-		
-		/*if(pc < DebugPool.CODE_START)
-		{
-			start = 0x0000;
-		}
-		else
-		{
-			if(pc < (DebugPool.CODE_START + LINE_HIGHLIGHTED))
-			{
-				start = 0x0000;
-			}
-			else if((pc + LINE_HIGHLIGHTED) > 0xFFFF - LINE_HIGHLIGHTED)
-			{
-				start = 0xFFFF - NUM_LINES_SHOWN;
-			}
-			else
-			{
-				start = pc - DebugPool.CODE_START - LINE_HIGHLIGHTED;
-			}
-		}*/
-		
 		
 		highlighted = pc - DebugPool.CODE_START;
 		highlighted = pc;
@@ -720,14 +459,9 @@ public class CpuViewer extends JPanel{
 	}
 	
 	public void update()
-	{		
-		/*try {
-			updateDisassemblyLinesTextPane();
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		if(!GuiController.pause) return;	//only show disassembly when execution is paused
+	{
+		if(!GuiController.pause) return;	//only show disassembly when execution is paused	
+		DebugPool.requestCPUMemorySpaceSnapshot();
 		updateDisassemblyLines();
 		label.setText(labelStr);		
 	}

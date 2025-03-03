@@ -39,6 +39,8 @@ public class DebugPool {
 	public static int PRG_size;
 	
 	public static int[] frameBuffer;
+	
+	public static boolean updateMemorySpace = false;
 	public static byte[] CPU_MEMORY_SPACE = new byte[0x10000];
 	
 	//data snapshots
@@ -109,5 +111,9 @@ public class DebugPool {
 		return (Util.UINT16(s) & 0b111000000000000) >>> 12;
 	}
 	
+	public static void requestCPUMemorySpaceSnapshot()
+	{
+		updateMemorySpace = true;
+	}
 		
 }

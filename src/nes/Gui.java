@@ -124,12 +124,27 @@ public class Gui {
 		initPpuViewer();
 				
 		//f.getContentPane().add(CPUViewer, BorderLayout.EAST);
-		f.getContentPane().add(dbgPane, BorderLayout.CENTER);
+		//f.getContentPane().add(dbgPane, BorderLayout.CENTER);
 		f.getContentPane().add(screen, BorderLayout.WEST);
+		//f.getContentPane().add(dbgPane, BorderLayout.EAST);
+		if(GuiController.DEBUG_SELECT == GuiController.DEBUG_CPU)
+		{
+			GuiController.pause = true;
+			f.getContentPane().add(CPUViewer, BorderLayout.EAST);
+		}		
+		else if(GuiController.DEBUG_SELECT == GuiController.DEBUG_PPU)
+		{
+			GuiController.pause = false;
+			f.getContentPane().add(dbgPane, BorderLayout.CENTER);
+			dbgPane.add(patternViewer);
+			dbgPane.add(nametableViewer);
+		}
 		//f.getContentPane().add(PPUViewer, BorderLayout.WEST);
+		//f.getContentPane().add(PPUViewer, BorderLayout.EAST);
 		
-		dbgPane.add(patternViewer);
-		dbgPane.add(nametableViewer);
+		//dbgPane.add(patternViewer);
+		//dbgPane.add(nametableViewer);
+		//dbgPane.add(CPUViewer);
 		f.pack();
 		f.setVisible(true);
 		
@@ -241,7 +256,7 @@ public class Gui {
 	
 	public void updateScreen()
 	{
-		screen.update();
+		screen.update();		
 		f.repaint();
 	}
 	
@@ -263,11 +278,10 @@ public class Gui {
 	}
 	
 	public void updateAll()
-	{
+	{		
 		//screen.update();
 		patternViewer.update();
-		nametableViewer.update();
-		CPUViewer.update();
+		nametableViewer.update();			
 		f.repaint();
 	}
 }
