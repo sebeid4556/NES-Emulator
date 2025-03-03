@@ -1,8 +1,12 @@
+# NES-Emulator
+Cycle-accurate NES emulator written in Java</br></br>
+![image](https://github.com/sebeid4556/NES-Emulator/blob/c0ff935341d7d75f061b70cd06f1200ea1e65b47/screenshot/all.png)
+
+# Technical
 CPU:
 - Emulated down to individual clock cycles within an instruction
 - Supports full instruction set (including illegal opcodes)
 - Passes nestest.nes (100% instruction accuracy)
-- Passes nestest.nes (all instructions perform their expected behaviors)
 
 PPU:
 - Synchronized w/ system clock and emulated down to cycle precision
@@ -22,3 +26,9 @@ The PPU Debugger shows the visual representation of VRAM and CHR-ROM:</br>
 - Mapper support
 - iNES 2.0 format support
 - Switch between CPU & PPU debug
+
+# Screenshots
+![alt text](https://github.com/sebeid4556/NES-Emulator/blob/main/screenshot/donkeykong.png?raw=true)
+![alt text](https://github.com/sebeid4556/NES-Emulator/blob/main/screenshot/smb.png?raw=true)
+![alt text](https://github.com/sebeid4556/NES-Emulator/blob/main/screenshot/nestest.png?raw=true)
+![alt text](https://github.com/sebeid4556/NES-Emulator/blob/main/screenshot/test.png?raw=true)
