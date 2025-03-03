@@ -20,12 +20,23 @@ The PPU Debugger shows the visual representation of VRAM and CHR-ROM:</br>
 - TOP: CHR-ROM (the graphics data in the cartridge)
 - BOTTOM: Nametables (the layout for the background tiles)
 
+# Updates
+- added flag to toggle CPU/PPU debugger
+
+# Fixed Bugs
+- fixed bug where certain games would cause the CPU debugger to fail to initialize
+
+# Current Bugs
+- vertical scrolling cuts off in IceClimbers during initial pan
+- slow framerate in FLAME.nes
+- visual artifacts in palette.nes
+- visual artifacts in PPU debugger
+
 # Future Enhancements
 - Support sprite rendering
 - Audio Processing Unit (APU)
 - Mapper support
 - iNES 2.0 format support
-- Switch between CPU & PPU debug
 
 # Screenshots
 ![alt text](https://github.com/sebeid4556/NES-Emulator/blob/main/screenshot/donkeykong.png?raw=true)
